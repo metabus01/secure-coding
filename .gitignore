@@ -1,6 +1,5 @@
-*.db
-*.pptx
-__pycache__uploads/
-market.db
-venv/
 __pycache__/
+venv/
+*.db
+uploads/
+.DS_Store
