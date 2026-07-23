@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}마이페이지{% endblock %}
+{% block content %}
+<h2>마이페이지</h2>
+<p class="muted">아이디: {{ user.username }} · 잔액: {{ user.balance }}원</p>
+
+<h3>소개글 수정</h3>
+<form method="post" action="{{ url_for('profile') }}">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <input type="hidden" name="action" value="bio">
+  <textarea name="bio" rows="3">{{ user.bio }}</textarea>
+  <button type="submit">소개글 저장</button>
+</form>
+
+<h3>비밀번호 변경</h3>
+<form method="post" action="{{ url_for('profile') }}">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <input type="hidden" name="action" value="password">
+  <label>현재 비밀번호</label>
+  <input type="password" name="current_password" required>
+  <label>새 비밀번호 (8자 이상, 영문+숫자)</label>
+  <input type="password" name="new_password" required>
+  <button type="submit">비밀번호 변경</button>
+</form>
+{% endblock %}

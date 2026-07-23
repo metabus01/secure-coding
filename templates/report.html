@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}신고{% endblock %}
+{% block content %}
+<h2>신고하기</h2>
+<form method="post" action="{{ url_for('report') }}">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <label>신고 유형</label>
+  <select name="target_type">
+    <option value="product" {{ 'selected' if ptype=='product' else '' }}>상품</option>
+    <option value="user" {{ 'selected' if ptype=='user' else '' }}>사용자</option>
+  </select>
+  <label>대상 ID</label>
+  <input type="text" name="target_id" value="{{ prefill }}" required>
+  <label>신고 사유</label>
+  <textarea name="reason" rows="3" required></textarea>
+  <button type="submit">신고 접수</button>
+</form>
+{% endblock %}

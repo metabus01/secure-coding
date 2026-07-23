@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}내 상품{% endblock %}
+{% block content %}
+<h2>내가 등록한 상품</h2>
+<ul>
+  {% for p in products %}
+    <li>
+      <div class="row" style="justify-content:space-between;">
+        <span>
+          <a class="card" href="{{ url_for('view_product', product_id=p.id) }}">{{ p.title }}</a>
+          <span class="muted"> - {{ p.price }}원</span>
+          <span class="badge {{ p.status }}">{{ p.status }}</span>
+        </span>
+        <span class="row">
+          <a href="{{ url_for('edit_product', product_id=p.id) }}"><button class="small" type="button">수정</button></a>
+          <form method="post" action="{{ url_for('delete_product', product_id=p.id) }}"
+                onsubmit="return confirm('삭제하시겠습니까?');" style="margin:0;">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button class="small danger" type="submit">삭제</button>
+          </form>
+        </span>
+      </div>
+    </li>
+  {% else %}
+    <li class="muted">등록한 상품이 없습니다.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

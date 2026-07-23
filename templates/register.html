@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}회원가입{% endblock %}
+{% block content %}
+<h2>회원가입</h2>
+<form method="post" action="{{ url_for('register') }}">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <label>아이디 (영문/숫자/_ 3~20자)</label>
+  <input type="text" name="username" required>
+  <label>비밀번호 (8자 이상, 영문+숫자)</label>
+  <input type="password" name="password" required>
+  <button type="submit">가입하기</button>
+</form>
+{% endblock %}

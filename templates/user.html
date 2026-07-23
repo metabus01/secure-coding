@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}{{ target.username }}{% endblock %}
+{% block content %}
+<h2>{{ target.username }}
+  <span class="badge {{ target.status }}">{{ target.status }}</span>
+</h2>
+<p>{{ target.bio }}</p>
+<p>
+  <a href="{{ url_for('private_chat', user_id=target.id) }}">1:1 채팅</a> ·
+  <a href="{{ url_for('report', target_type='user', target_id=target.id) }}">신고</a>
+</p>
+<h3>판매 중인 상품</h3>
+<ul>
+  {% for p in products %}
+    <li><a class="card" href="{{ url_for('view_product', product_id=p.id) }}">{{ p.title }}</a>
+      <span class="muted"> - {{ p.price }}원</span></li>
+  {% else %}<li class="muted">없음</li>{% endfor %}
+</ul>
+{% endblock %}

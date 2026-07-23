@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}관리자{% endblock %}
+{% block content %}
+<h2>관리자 페이지</h2>
+
+<h3>사용자 관리</h3>
+<table>
+  <tr><th>아이디</th><th>상태</th><th>신고수</th><th>잔액</th><th>조치</th><th>잔액지급</th></tr>
+  {% for u in users %}
+  <tr>
+    <td>{{ u.username }}{% if u.is_admin %} <span class="muted">(admin)</span>{% endif %}</td>
+    <td><span class="badge {{ u.status }}">{{ u.status }}</span></td>
+    <td>{{ u.report_count }}</td>
+    <td>{{ u.balance }}</td>
+    <td>
+      <form method="post" action="{{ url_for('admin_user', user_id=u.id, action='dormant' if u.status=='active' else 'activate') }}" style="margin:0;">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="small {{ 'danger' if u.status=='active' else '' }}" type="submit">
+          {{ '휴면' if u.status=='active' else '활성' }}
+        </button>
+      </form>
+    </td>
+    <td>
+      <form method="post" action="{{ url_for('admin_grant', user_id=u.id) }}" class="row" style="margin:0;">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="number" name="amount" value="10000" min="1" style="margin:0; width:100px;">
+        <button class="small" type="submit">지급</button>
+      </form>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+
+<h3>상품 관리</h3>
+<table>
+  <tr><th>상품명</th><th>상태</th><th>신고수</th><th>조치</th></tr>
+  {% for p in products %}
+  <tr>
+    <td>{{ p.title }}</td>
+    <td><span class="badge {{ p.status }}">{{ p.status }}</span></td>
+    <td>{{ p.report_count }}</td>
+    <td class="row">
+      <form method="post" action="{{ url_for('admin_product', product_id=p.id, action='block' if p.status=='active' else 'unblock') }}" style="margin:0;">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="small" type="submit">{{ '차단' if p.status=='active' else '해제' }}</button>
+      </form>
+      <form method="post" action="{{ url_for('admin_product', product_id=p.id, action='delete') }}" style="margin:0;" onsubmit="return confirm('삭제?');">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="small danger" type="submit">삭제</button>
+      </form>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+
+<h3>최근 신고</h3>
+<table>
+  <tr><th>유형</th><th>대상ID</th><th>사유</th><th>일시</th></tr>
+  {% for r in reports %}
+  <tr><td>{{ r.target_type }}</td><td class="muted">{{ r.target_id[:8] }}…</td><td>{{ r.reason }}</td><td class="muted">{{ r.created_at }}</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

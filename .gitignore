@@ -1,0 +1,6 @@
+*.db
+*.pptx
+__pycache__uploads/
+market.db
+venv/
+__pycache__/

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}잔액 충전{% endblock %}
+{% block content %}
+<h2>잔액 충전</h2>
+<p class="muted">현재 잔액: <b>{{ user.balance }}원</b></p>
+<p class="muted">※ 모의 결제(mock payment)입니다. 1회 최대 {{ max_once }}원, 보유 상한 {{ max_balance }}원.</p>
+<form method="post" action="{{ url_for('topup') }}">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <label>충전 금액(원)</label>
+  <input type="number" name="amount" min="1" max="{{ max_once }}" value="10000" required>
+  <button type="submit">충전하기</button>
+</form>
+{% endblock %}

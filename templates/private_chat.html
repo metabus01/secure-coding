@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}1:1 채팅{% endblock %}
+{% block content %}
+<h2>{{ target.username }} 님과의 1:1 채팅</h2>
+<ul id="messages">
+  {% for m in messages %}
+    <li>{{ '나' if m.sender_id == me else target.username }}: {{ m.content }}</li>
+  {% endfor %}
+</ul>
+<div class="row">
+  <input id="chat_input" type="text" placeholder="메시지" style="margin:0;">
+  <button class="small" onclick="sendMessage()">전송</button>
+</div>
+
+<script>
+  var ROOM = {{ room | tojson }};
+  var TO = {{ target.id | tojson }};
+  var MY_NAME = {{ user.username | tojson }};
+  var socket = io();
+  socket.on('connect', function() { socket.emit('join_private', { room: ROOM }); });
+  socket.on('private_message', function(data) {
+    var item = document.createElement('li');
+    item.textContent = data.username + ": " + data.message;  // [보안] textContent
+    document.getElementById('messages').appendChild(item);
+  });
+  function sendMessage() {
+    var input = document.getElementById('chat_input');
+    if (input.value.trim()) {
+      socket.emit('private_message', { room: ROOM, to: TO, message: input.value });
+      input.value = "";
+    }
+  }
+</script>
+{% endblock %}

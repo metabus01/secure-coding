@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}검색{% endblock %}
+{% block content %}
+<h2>검색</h2>
+<form method="get" action="{{ url_for('search') }}">
+  <div class="row">
+    <input type="text" name="q" value="{{ q }}" placeholder="상품명·설명·사용자명 검색" style="margin:0;">
+    <button class="small" type="submit">검색</button>
+  </div>
+</form>
+{% if q %}
+  <h3>상품 결과</h3>
+  <ul>
+    {% for p in products %}
+      <li><a class="card" href="{{ url_for('view_product', product_id=p.id) }}">{{ p.title }}</a>
+        <span class="muted"> - {{ p.price }}원</span></li>
+    {% else %}<li class="muted">상품 결과 없음</li>{% endfor %}
+  </ul>
+  <h3>사용자 결과</h3>
+  <ul>
+    {% for u in users %}
+      <li><a class="card" href="{{ url_for('view_user', user_id=u.id) }}">{{ u.username }}</a>
+        <span class="muted"> {{ u.bio }}</span></li>
+    {% else %}<li class="muted">사용자 결과 없음</li>{% endfor %}
+  </ul>
+{% endif %}
+{% endblock %}

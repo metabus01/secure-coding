@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Tiny Market{% endblock %}</title>
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <style>
+    body { background:#F7F7F7; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; margin:0; color:#333; }
+    nav { background:#fff; padding:16px 24px; border-bottom:1px solid #e0e0e0; }
+    nav a { text-decoration:none; color:#555; margin-right:15px; font-weight:500; }
+    nav a:hover { color:#007AFF; }
+    .container { max-width:820px; margin:32px auto; background:#fff; padding:36px; box-shadow:0 4px 12px rgba(0,0,0,.05); border-radius:8px; }
+    h1,h2,h3 { font-weight:600; margin-bottom:16px; }
+    input,textarea,select,button { width:100%; padding:10px; margin-bottom:16px; border:1px solid #e0e0e0; border-radius:4px; font-size:15px; box-sizing:border-box; }
+    button { background:#007AFF; color:#fff; border:none; cursor:pointer; transition:.2s; }
+    button:hover { background:#005BB5; }
+    button.danger { background:#e53935; }
+    button.danger:hover { background:#b71c1c; }
+    button.small { width:auto; padding:6px 12px; font-size:13px; margin:0; display:inline-block; }
+    ul { list-style:none; padding:0; }
+    li { padding:10px; border-bottom:1px solid #eee; }
+    a.card { color:#007AFF; }
+    .flash { background:#FFECB3; padding:10px; border:1px solid #FFB74D; border-radius:4px; margin-bottom:8px; list-style:none; }
+    #messages { height:200px; overflow-y:auto; border:1px solid #e0e0e0; padding:10px; border-radius:4px; margin-bottom:10px; background:#fafafa; }
+    .row { display:flex; gap:8px; align-items:center; }
+    table { width:100%; border-collapse:collapse; font-size:14px; }
+    th,td { border-bottom:1px solid #eee; padding:8px; text-align:left; }
+    .muted { color:#888; font-size:13px; }
+    .badge { padding:2px 8px; border-radius:10px; font-size:12px; }
+    .badge.active { background:#E8F5E9; color:#2E7D32; }
+    .badge.blocked,.badge.dormant { background:#FFEBEE; color:#C62828; }
+  </style>
+</head>
+<body>
+  <nav>
+    {% if session.get('user_id') %}
+      <a href="{{ url_for('dashboard') }}">대시보드</a>
+      <a href="{{ url_for('search') }}">검색</a>
+      <a href="{{ url_for('new_product') }}">상품등록</a>
+      <a href="{{ url_for('my_products') }}">내 상품</a>
+      <a href="{{ url_for('my_purchases') }}">구매내역</a>
+      <a href="{{ url_for('topup') }}">충전</a>
+      <a href="{{ url_for('transfer') }}">송금</a>
+      <a href="{{ url_for('profile') }}">마이페이지</a>
+      <a href="{{ url_for('report') }}">신고</a>
+      {% if user is defined and user and user.is_admin %}<a href="{{ url_for('admin') }}">관리자</a>{% endif %}
+      <a href="{{ url_for('logout') }}">로그아웃</a>
+    {% else %}
+      <a href="{{ url_for('login') }}">로그인</a>
+      <a href="{{ url_for('register') }}">회원가입</a>
+    {% endif %}
+  </nav>
+  <div class="container">
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul>{% for m in messages %}<li class="flash">{{ m }}</li>{% endfor %}</ul>
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </div>
+</body>
+</html>
